@@ -1,3 +1,8 @@
+//-----------Name: Rudy Huayhua -------------//
+//---------- Student id: 301229804 ----------//
+//------------- MidTerm Test ----------------//
+
+
 // create a reference to the model
 let Movie = require('../models/movie');
 
@@ -45,13 +50,14 @@ module.exports.details = (req, res, next) => {
 module.exports.displayAddPage = (req, res, next) => {
     
     // ADD YOUR CODE HERE
-    let newItem = Movie();
+    // Here we pass a blank value for the movie property
+    let newMovie = Movie();
 
     res.render(
         'movie/add_edit', 
         {
             title: 'Add a new Movie',
-            movie: newItem, 
+            movie: newMovie, 
         }
     )          
 
@@ -61,7 +67,10 @@ module.exports.displayAddPage = (req, res, next) => {
 module.exports.processAddPage = (req, res, next) => {
 
     // ADD YOUR CODE HERE
-    let newItem = Movie({
+
+    // Here we instantiate and object of the movie-model
+    // excluding _id property
+    let newMovie = Movie({
         Title: req.body.Title,
         Synopsis: req.body.Synopsis,
         Year: req.body.Year,
@@ -69,7 +78,9 @@ module.exports.processAddPage = (req, res, next) => {
         Genre: req.body.Genre
     });
 
-    Movie.create(newItem, (err, item) =>{
+    // Here we pass the object to the create method of the movie-model
+    // to add a new movie to the DB
+    Movie.create(newMovie, (err, movie) =>{
         if(err)
         {
             console.log(err);
@@ -77,8 +88,9 @@ module.exports.processAddPage = (req, res, next) => {
         }
         else
         {
-            // refresh the book list
-            console.log(item);
+            // Here we redirect to the movie list page 
+            // after insertion is completed
+            //console.log(movie);
             res.redirect('/movie/list');
         }
     });
@@ -89,9 +101,14 @@ module.exports.processAddPage = (req, res, next) => {
 module.exports.displayEditPage = (req, res, next) => {
     
     // ADD YOUR CODE HERE
+    
+    // Here we get the id of the movie to be updated
     let id = req.params.id;
 
-    Movie.findById(id, (err, itemToEdit) => {
+
+    // Here we pass the id variable to the movie models's method findById
+    // and render the right movie 
+    Movie.findById(id, (err, movieToEdit) => {
         if(err)
         {
             console.log(err);
@@ -104,7 +121,7 @@ module.exports.displayEditPage = (req, res, next) => {
                 'movie/add_edit', 
                 {
                     title: 'Edit Movie', 
-                    movie: itemToEdit 
+                    movie: movieToEdit 
                 }
             )
         }
@@ -117,9 +134,15 @@ module.exports.processEditPage = (req, res, next) => {
     
     // ADD YOUR CODE HERE
 
+    // Here we get the id of the movie to be updated
     let id = req.params.id
 
-    let updatedItem = Movie({
+    //console.log(id);
+
+    // Here we instantiate and object of the movie-model
+    // and set the values
+    // including _id property
+    let updatedMovie = Movie({
         _id: req.body.id,
         Title: req.body.Title,
         Synopsis: req.body.Synopsis,
@@ -128,9 +151,11 @@ module.exports.processEditPage = (req, res, next) => {
         Genre: req.body.Genre
     });
 
-    // console.log(updatedItem);
-
-    Movie.updateOne({_id: id}, updatedItem, (err) => {
+    //console.log(updatedMovie);
+    
+    // Here we use the object instantiated to
+    // to update in DB
+    Movie.updateOne({_id: id}, updatedMovie, (err) => {
         if(err)
         {
             console.log(err);
@@ -150,7 +175,12 @@ module.exports.processEditPage = (req, res, next) => {
 module.exports.performDelete = (req, res, next) => {
     
     // ADD YOUR CODE HERE
+
+    // Here we get the id of the movie to be deleted
     let id = req.params.id;
+
+    // Here we pass the id of the movie to be deleted
+    // to the remove method of the movie-model
 
     Movie.remove({_id: id}, (err) => {
         if(err)

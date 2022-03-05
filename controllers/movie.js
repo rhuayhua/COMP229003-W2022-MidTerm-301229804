@@ -89,6 +89,26 @@ module.exports.processAddPage = (req, res, next) => {
 module.exports.displayEditPage = (req, res, next) => {
     
     // ADD YOUR CODE HERE
+    let id = req.params.id;
+
+    Movie.findById(id, (err, itemToEdit) => {
+        if(err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            //show the edit view
+            res.render(
+                'movie/add_edit', 
+                {
+                    title: 'Edit Movie', 
+                    movie: itemToEdit 
+                }
+            )
+        }
+    });
 
 }
 
@@ -96,6 +116,33 @@ module.exports.displayEditPage = (req, res, next) => {
 module.exports.processEditPage = (req, res, next) => {
     
     // ADD YOUR CODE HERE
+
+    let id = req.params.id
+
+    let updatedItem = Movie({
+        _id: req.body.id,
+        Title: req.body.Title,
+        Synopsis: req.body.Synopsis,
+        Year: req.body.Year,
+        Director: req.body.Director,
+        Genre: req.body.Genre
+    });
+
+    // console.log(updatedItem);
+
+    Movie.updateOne({_id: id}, updatedItem, (err) => {
+        if(err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            // console.log(req.body);
+            // refresh the book list
+            res.redirect('/movie/list');
+        }
+    });
     
 }
 
@@ -103,5 +150,19 @@ module.exports.processEditPage = (req, res, next) => {
 module.exports.performDelete = (req, res, next) => {
     
     // ADD YOUR CODE HERE
+    let id = req.params.id;
+
+    Movie.remove({_id: id}, (err) => {
+        if(err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            // refresh the book list
+            res.redirect('/movie/list');
+        }
+    });
 
 }

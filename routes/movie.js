@@ -10,8 +10,8 @@ router.get('/list', movieController.movieList);
 router.get('/details/:id', movieController.details);
 
 // Routers for edit functions
-router.get('/edit/:id', movieController.displayEditPage);
-router.post('/edit/:id', movieController.processEditPage);
+router.get('/add_edit/:id', movieController.displayEditPage);
+router.post('/add_edit/:id', movieController.processEditPage);
 
 // Router for Delete function
 router.get('/delete/:id', movieController.performDelete);
